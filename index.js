@@ -1,6 +1,7 @@
 import express from 'express';
 import { Mongo } from "./src/database/mongo.js";
 import { config } from "dotenv";
+import desafiosRouter from './src/routes/desafios.js';
 
 config();
 
@@ -9,6 +10,8 @@ async function main() {
 
     const app = express();
     const mongoConnection = await Mongo.connect({mongoConnectionString: process.env.MONGO_CONNECTION_STRING, mongoDbName: process.env.MONGO_DATABASE_NAME});
+    console.log(mongoConnection);
+
     app.use(express.json());
 
     app.get("/", (req, res) => {
@@ -18,7 +21,7 @@ async function main() {
         });
     });
 
-    // app.use('/daily', desafioRoute)
+    app.use('/daily', desafiosRouter)
 
     app.listen(port, function(err) {
         if(err) console.log("Error in server setup");
