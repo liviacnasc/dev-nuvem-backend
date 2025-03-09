@@ -1,7 +1,5 @@
 import { DateTime } from "luxon";
-import { DateTime } from "luxon";
 import { Mongo } from "../database/mongo.js";
-import { ObjectId } from "mongodb";
 import { ObjectId } from "mongodb";
 
 
@@ -48,23 +46,11 @@ export default class DesafiosDAO {
         .findOne(
             {
                 data: {$eq: data}
-                data: {$eq: data}
             }
         )
 
         return result;
     }
-
-
-    async setDesafioDiario() {
-
-        const data = DateTime.local().setZone('America/Sao_paulo').setLocale('pt-br').toLocaleString();
-
-        const validacaoDesafio = await this.getDesafioPorData(data)
-
-        return result;
-    }
-
 
     async setDesafioDiario() {
 
@@ -80,31 +66,17 @@ export default class DesafiosDAO {
         .collection('desenho')
         .findOne(
             {historico_id: {$exists: false}},
-        );
-        .findOne(
-            {historico_id: {$exists: false}},
-        );
+        )
 
         if(!desafio._id) {
             throw new Error("Não foi possível atualizar o desafio.")
         }
 
         const insertHistorico = await this.insertDesafioHistorico(desafio._id, data);
-        const insertHistorico = await this.insertDesafioHistorico(desafio._id, data);
 
-        if(!insertHistorico.insertedId) {
         if(!insertHistorico.insertedId) {
             throw new Error("Não foi possível adicionar o desafio ao Histórico.")
         }
-        
-        const result = await Mongo.db
-        .collection('desenho')
-        .updateOne(
-            { _id: desafio._id},
-            {
-                $set: {"historico_id": insertHistorico.insertedId}
-            }
-        );
         
         const result = await Mongo.db
         .collection('desenho')
@@ -124,7 +96,6 @@ export default class DesafiosDAO {
         .collection("historico")
         .aggregate([
             { $match: {data: DateTime.local().setZone('America/Sao_paulo').setLocale('pt-br').toLocaleString()}},
-            { $match: {data: DateTime.local().setZone('America/Sao_paulo').setLocale('pt-br').toLocaleString()}},
             { $lookup: {
                 from: 'desenho',
                 localField: 'desafioId',
@@ -140,7 +111,6 @@ export default class DesafiosDAO {
         .toArray();
 
         if(result.length == 0) {
-            throw new Error("Desafio diário  não foi escolhido até o momento.")
             throw new Error("Desafio diário  não foi escolhido até o momento.")
         }
 
