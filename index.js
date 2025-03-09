@@ -18,6 +18,7 @@ async function main() {
         res.send({
             success: true,
             statusCode: 200
+
         });
     });
 

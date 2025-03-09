@@ -3,9 +3,9 @@ import { Mongo } from "../database/mongo.js";
 import { ObjectId } from "mongodb";
 
 
-export default class DesafiosDAO {
+export default class HistoricoDao {
 
-    async insertDesafioHistorico(desafioId, data) {
+    async insertDesafio(desafioId, data) {
         const result = await Mongo.db
         .collection('historico')
         .insertOne({
@@ -30,43 +30,43 @@ export default class DesafiosDAO {
     }
 
 
-    async setDesafioDiario() {
+    // async setDesafioDiario() {
 
-        const data = DateTime.local().setZone('America/Sao_paulo').setLocale('pt-br').toLocaleString();
+    //     const data = DateTime.local().setZone('America/Sao_paulo').setLocale('pt-br').toLocaleString();
 
-        const validacaoDesafio = await this.getDesafioPorData(data)
+    //     const validacaoDesafio = await this.getDesafioPorData(data)
 
-        if(validacaoDesafio){
-            throw new Error("Desafio do dia já foi adicionado.")
-        }
+    //     if(validacaoDesafio){
+    //         throw new Error("Desafio do dia já foi adicionado.")
+    //     }
 
-        const desafio = await Mongo.db
-        .collection('desenho')
-        .findOne(
-            {historico_id: {$exists: false}},
-        );
+    //     const desafio = await Mongo.db
+    //     .collection('desenho')
+    //     .findOne(
+    //         {historico_id: {$exists: false}},
+    //     );
 
-        if(!desafio._id) {
-            throw new Error("Não foi possível atualizar o desafio.")
-        }
+    //     if(!desafio._id) {
+    //         throw new Error("Não foi possível atualizar o desafio.")
+    //     }
 
-        const insertHistorico = await this.insertDesafioHistorico(desafio._id, data);
+    //     const insertHistorico = await this.insertDesafioHistorico(desafio._id, data);
 
-        if(!insertHistorico.insertedId) {
-            throw new Error("Não foi possível adicionar o desafio ao Histórico.")
-        }
+    //     if(!insertHistorico.insertedId) {
+    //         throw new Error("Não foi possível adicionar o desafio ao Histórico.")
+    //     }
         
-        const result = await Mongo.db
-        .collection('desenho')
-        .updateOne(
-            { _id: desafio._id},
-            {
-                $set: {"historico_id": insertHistorico.insertedId}
-            }
-        );
+    //     const result = await Mongo.db
+    //     .collection('desenho')
+    //     .updateOne(
+    //         { _id: desafio._id},
+    //         {
+    //             $set: {"historico_id": insertHistorico.insertedId}
+    //         }
+    //     );
 
-        return result;
-    }
+    //     return result;
+    // }
 
     async getDesafioDiario() {
 
