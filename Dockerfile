@@ -1,7 +1,7 @@
 FROM node:20
 
 # Set the working directory in the container
-WORKDIR /app
+WORKDIR /src
 
 # Copy the application files into the working directory
 COPY . /src
