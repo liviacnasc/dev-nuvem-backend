@@ -17,11 +17,7 @@ async function main() {
     app.use(cors());
     
     app.get("/", (req, res) => {
-        res.send({
-            success: true,
-            statusCode: 200
-
-        });
+        res.status(200).send("Rodando normal")
     });
 
     app.use('/daily', desafiosRouter)
