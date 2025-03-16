@@ -12,6 +12,18 @@ desafiosRouter.get('/', async (req, res) => {
     res.status(statusCode).send({success, statusCode, body});
 })
 
+// desafiosRouter.get('/:id', async (req, res) => {
+//     const { success, statusCode, body } = await desafiosController.getDesafioDoHistorico(req.params.id);
+
+//     res.status(statusCode).send({success, statusCode, body});
+// })
+
+desafiosRouter.get('/historico', async (req, res) => {
+    const {success, statusCode, body } = await desafiosController.getHistorico();
+
+    res.status(statusCode).send({success, statusCode, body});
+})
+
 desafiosRouter.post('/set-desafio', async (req, res) => {
     const {success, statusCode, body } = await desafiosController.setDesafio();
 

@@ -7,6 +7,15 @@ export default class DesafiosController {
         this.dataAcess = new DesafiosDAO();
     }
     
+    async getDesafioDoHistorico(id) {
+        try {
+            const result = await this.dataAcess.getDesafioPorId(id)
+
+            return success(result);
+        } catch (error) {
+            return serverError(error);
+        }
+    }
 
     async getDesafio() {
         try {
@@ -21,6 +30,16 @@ export default class DesafiosController {
     async setDesafio() {
         try {
             const result = await this.dataAcess.setDesafioDiario();
+
+            return success(result);
+        } catch (error) {
+            return serverError(error);
+        }
+    }
+
+    async getHistorico() {
+        try {
+            const result = await this.dataAcess.getHistorico();
 
             return success(result);
         } catch (error) {

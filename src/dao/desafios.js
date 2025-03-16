@@ -5,9 +5,35 @@ import { ObjectId } from "mongodb";
 
 export default class DesafiosDAO {
 
+    async getDesafioPorId() {
+        const result = await Mongo.db
+        .collection("historico")
+        .aggregate([
+            { $match: {_id: _id}},
+            { $lookup: {
+                from: 'desafios',
+                localField: 'desafioId',
+                foreignField: '_id',
+                as: 'desafio'
+            }},
+            {
+                $unwind: {
+                    path: "$desafio"
+                }
+            }
+        ])
+        .toArray();
+
+        if(result.length == 0) {
+            throw new Error("Desafio diário  não foi escolhido até o momento.")
+        }
+
+        return result;
+    }
+
     async encontrarNovoDesafio() {
         const result = await Mongo.db
-        .collection('desenho')
+        .collection('desafios')
         .findOne(
             {historico_id: {$exists: false}},
         );
@@ -17,7 +43,7 @@ export default class DesafiosDAO {
 
     async setHistoricoId(desafio) {
         const result = await Mongo.db
-        .collection('desenho')
+        .collection('desafios')
         .updateOne(
             { _id: desafio._id},
             {
@@ -63,7 +89,7 @@ export default class DesafiosDAO {
         }
 
         const desafio = await Mongo.db
-        .collection('desenho')
+        .collection('desafios')
         .findOne(
             {historico_id: {$exists: false}},
         )
@@ -79,13 +105,38 @@ export default class DesafiosDAO {
         }
         
         const result = await Mongo.db
-        .collection('desenho')
+        .collection('desafios')
         .updateOne(
             { _id: desafio._id},
             {
                 $set: {"historico_id": insertHistorico.insertedId}
             }
         );
+
+        return result;
+    }
+
+    async getHistorico() {
+        const result = await Mongo.db
+        .collection('historico')
+        .aggregate([
+            { $lookup :{
+                from: 'desafios',
+                localField: 'desafioId',
+                foreignField: '_id',
+                as: 'desafio'
+            }},
+            {
+                $unwind: {
+                    path: "$desafio"
+                }
+            }
+        ])
+        .toArray();
+
+        if(result.length == 0) {
+            throw new Error("Não há registros.")
+        }
 
         return result;
     }
@@ -97,7 +148,7 @@ export default class DesafiosDAO {
         .aggregate([
             { $match: {data: DateTime.local().setZone('America/Sao_paulo').setLocale('pt-br').toLocaleString()}},
             { $lookup: {
-                from: 'desenho',
+                from: 'desafios',
                 localField: 'desafioId',
                 foreignField: '_id',
                 as: 'desafio'

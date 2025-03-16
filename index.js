@@ -1,4 +1,5 @@
 import express from 'express';
+import cors from 'cors';
 import { Mongo } from "./src/database/mongo.js";
 import { config } from "dotenv";
 import desafiosRouter from './src/routes/desafios.js';
@@ -13,7 +14,8 @@ async function main() {
     console.log(mongoConnection);
 
     app.use(express.json());
-
+    app.use(cors());
+    
     app.get("/", (req, res) => {
         res.send({
             success: true,
