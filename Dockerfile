@@ -1,5 +1,7 @@
 FROM node:20
 
+EXPOSE 3000
+
 # Set the working directory in the container
 WORKDIR /src
 
